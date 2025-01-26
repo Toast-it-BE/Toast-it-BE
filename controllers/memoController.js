@@ -34,7 +34,7 @@ const updateMemo = (req, res) => {
     return res.status(404).json({ message: "해당 메모를 찾을 수 없습니다." });
   }
 
-  // content가 비어 있으면 수정하지 않고 오류 메시지 반환
+  // content가 비어 있다면 수정하지 않고 오류 메시지 반환
   if (!content) {
     return res.status(400).json({ message: "본문 내용이 없어 저장되지 않았습니다." });
   }

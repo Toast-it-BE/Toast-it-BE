@@ -3,6 +3,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier 플러그인 사용
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"], // ESLint 활성화 파일 확장자
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true // 저장 시 ESLint 자동 수정
+      "source.fixAll.eslint": "explicit"
     }
 }

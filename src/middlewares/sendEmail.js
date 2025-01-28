@@ -1,27 +1,19 @@
 const nodemailer = require('nodemailer');
-
-function generateRandomCode(n) {
-  let str = '';
-  for (let i = 0; i < n; i++) {
-      str += Math.floor(Math.random() * 10);
-  }
-  return str;
-}
+require('dotenv').config();
 
 const sendRecoveryCode = async (toEmail, recoveryCode) => {
-  code = generateRandomCode(6); // 6자리 랜덤 코드 생성
-  //console.log(toEmail, code);
+  console.log(toEmail, recoveryCode);
 
-  let transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-      user: 'ttoastiit@gmail.com', // 발신자 이메일
-      pass: 'codeitboost', // 발신자 비밀번호
+      user: process.env.GMAIL_USER, // 발신자 이메일
+      pass: process.env.GMAIL_APP_KEY, // 발신자 비밀번호
     },
   });
   
   let mailOptions = {
-    from: `"TOAST IT" <ttoastiit@gmail.com>`,
+    from: `"TOAST IT" <${process.env.GMAIL_USER}>`,
     to: toEmail,
     subject: '[TOAST IT] 인증번호를 입력해주세요.',
     text: `${recoveryCode}`,

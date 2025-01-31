@@ -1,11 +1,11 @@
 require('dotenv').config();
 
 module.exports = {
-  port: process.env.PORT || 3000, // 기본값 3000
+  port: process.env.PORT,
   db: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    uri: process.env.URI,
   },
-  apiKey: process.env.API_KEY,
+  jwtSecret: process.env.jwtSecret,
+  KAKAO_CLIENT_ID: process.env.KAKAO_CLIENT_ID,
+  KAKAO_REDIRECT_URI: process.env.KAKAO_REDIRECT_URI,
 };

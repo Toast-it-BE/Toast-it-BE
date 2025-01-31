@@ -1,10 +1,26 @@
 const express = require('express');
-const sampleRoutes = require('./routes/sampleRoutes.js');
+const connectDB = require('./utils/db');
+const userRoutes = require('./routes/UserRoutes');
+const categoryRoutes = require('./routes/CategoryRoutes');
+const memoRoutes = require('./routes/MemoRoutes');
+
 const app = express();
 
+// MongoDB 연결
+connectDB();
+
+// 미들웨어 설정
 app.use(express.json());
 
-// Routes
-app.use('/api/sample', sampleRoutes);
+// 라우트 설정
+app.get('/', (req, res) => {
+  res.send('MongoDB 연결 확인 성공!');
+});
 
-module.exports = app;
+app.use('/api/auth', userRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/memos', memoRoutes);
+
+app.listen(3000, () => {
+  console.log('서버가 http://localhost:3000 에서 실행 중입니다.');
+});

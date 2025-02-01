@@ -1,8 +1,13 @@
 {
-    "editor.formatOnSave": true, // 저장 시 자동 포맷팅
-    "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier 플러그인 사용
-    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"], // ESLint 활성화 파일 확장자
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
-    }
+  "editor.formatOnSave": true, // 저장 시 자동 포맷팅
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier 플러그인 사용
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ], // ESLint 활성화 파일 확장자
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }

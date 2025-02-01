@@ -1,6 +1,6 @@
 const express = require('express');
 const connectDB = require('./utils/db');
-const userRoutes = require('./routes/UserRoutes');
+const authRoutes = require('./routes/AuthRoutes');
 const categoryRoutes = require('./routes/CategoryRoutes');
 const memoRoutes = require('./routes/MemoRoutes');
 
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   res.send('MongoDB 연결 확인 성공!');
 });
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/memos', memoRoutes);
 

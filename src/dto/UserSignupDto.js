@@ -19,7 +19,6 @@ class UserSignupDTO {
     }
   }
 
-  // 이메일 형식 검증
   validateEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!this.email || !emailRegex.test(this.email)) {
@@ -27,7 +26,6 @@ class UserSignupDTO {
     }
   }
 
-  // 비밀번호 형식 검증
   validatePassword() {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(this.password)) {

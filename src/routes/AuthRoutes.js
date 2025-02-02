@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const userController = require('../controllers/AuthController');
-const authMiddleware = require('../middlewares/TokenAuth');
+const { authMiddleware } = require('../middlewares/TokenAuth');
 
 // 일반 회원가입
 router.post('/signup', userController.signup);

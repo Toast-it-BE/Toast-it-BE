@@ -17,9 +17,11 @@ connectDB();
 // CORS 설정
 app.use(cors());
 
+app.options('*', cors());
+
 app.use(
   cors({
-    origin: 'http://localhost:8000', // 허용할 도메인
+    origin: '*', // 허용할 도메인
     credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
     methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE', // 허용할 메소드
     allowedHeaders: 'Content-Type, Authorization', // 허용할 헤더
@@ -34,6 +36,6 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/memos', memoRoutes);
 app.use('/api/auth/password', passwordRoutes);
 
-app.listen(config.port, () => {
+app.listen(config.port, '0.0.0.0', () => {
   console.log('서버가 http://localhost:8000 에서 실행 중입니다.');
 });

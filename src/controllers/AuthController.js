@@ -2,6 +2,23 @@ const AuthService = require('../services/AuthService');
 const UserSignupDTO = require('../dto/UserSignupDto');
 const UserLoginDTO = require('../dto/UserLoginDto');
 
+exports.checkEmailExists = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: '이메일을 입력해주세요.' });
+    }
+
+    const exists = await AuthService.checkEmailExists(email);
+
+    return res.status(200).json({ exists });
+  } catch (error) {
+    console.error('이메일 중복 확인 오류:', error);
+    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+  }
+};
+
 exports.signup = async (req, res) => {
   try {
     const user = await AuthService.signup(new UserSignupDTO(req.body));

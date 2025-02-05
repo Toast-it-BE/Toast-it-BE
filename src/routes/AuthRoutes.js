@@ -4,6 +4,9 @@ const router = express.Router();
 const userController = require('../controllers/AuthController');
 const { authMiddleware } = require('../middlewares/TokenAuth');
 
+// 이메일 가입 여부 확인
+router.post('/check-email', userController.checkEmailExists);
+
 // 일반 회원가입
 router.post('/signup', userController.signup);
 

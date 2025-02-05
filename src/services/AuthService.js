@@ -7,6 +7,16 @@ const Memo = require('../models/Memo');
 const config = require('../config');
 
 class AuthService {
+  static async checkEmailExists(email) {
+    try {
+      const user = await User.findOne({ email });
+      return !!user;
+    } catch (error) {
+      console.error('이메일 조회 오류:', error);
+      throw error;
+    }
+  }
+
   // 일반 회원가입
   static async signup(userSignupDTO) {
     userSignupDTO.validate();

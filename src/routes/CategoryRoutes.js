@@ -19,4 +19,7 @@ router.get(
   memoController.getMemosByCategory,
 );
 
+// 유저별 카테고리 조회
+router.get('/:userId', authMiddleware, categoryController.getUserCategories);
+
 module.exports = router;

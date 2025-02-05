@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 class CategoryService {
   // 카테고리 이름 변경
@@ -24,6 +25,17 @@ class CategoryService {
         name: category.name,
       },
     };
+  }
+
+  static async getUserCategories(userId) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) return null;
+      return user.categories.map(categoryId => ({ id: categoryId }));
+    } catch (error) {
+      console.error('사용자 카테고리 조회 오류:', error);
+      throw error;
+    }
   }
 }
 

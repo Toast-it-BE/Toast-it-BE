@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker stop my-app || true
-            sudo docker rm my-app || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
-            sudo docker run -d --name my-app -p 3000:3000 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            sudo docker stop app || true
+            sudo docker rm app || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest
+            sudo docker run -d --name app -p 3000:3000 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/app:latest

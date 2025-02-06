@@ -13,10 +13,16 @@ jobs:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v3
 
-      - name: Docker 이미지 빌드 및 Docker Hub에 Push
+      - name: Docker Buildx 설정
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker Hub 로그인
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker build -t app .
+
+      - name: Docker 이미지 빌드 및 Push (캐시 없이 새로 빌드)
+        run: |
+          docker buildx build --no-cache -t app .
           docker tag app ${{ secrets.DOCKER_USERNAME }}/app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
 

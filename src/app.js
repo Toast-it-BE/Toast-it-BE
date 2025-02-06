@@ -28,6 +28,10 @@ app.use(
   }),
 );
 
+app.get('/', (req, res) => {
+  res.send('안녕하세요!');
+});
+
 // 미들웨어 설정
 app.use(express.json());
 

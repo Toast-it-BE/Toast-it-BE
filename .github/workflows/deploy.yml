@@ -23,7 +23,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
 
       - name: SSH를 이용해 EC2에 배포
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}

@@ -29,7 +29,7 @@ app.use(
 );
 
 app.get('/', (req, res) => {
-  res.send('안녕하세요!');
+  res.send('연결 성공!');
 });
 
 // 미들웨어 설정

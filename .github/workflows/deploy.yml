@@ -1,0 +1,33 @@
+name: Deploy to EC2 using Docker
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 레포지토리 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Docker 이미지 빌드 및 Docker Hub에 Push
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker build -t my-app .
+          docker tag my-app ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+
+      - name: SSH를 이용해 EC2에 배포
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker stop my-app || true
+            sudo docker rm my-app || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            sudo docker run -d --name my-app -p 3000:3000 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/my-app:latest

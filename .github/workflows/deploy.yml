@@ -16,9 +16,9 @@ jobs:
       - name: Docker 이미지 빌드 및 Docker Hub에 Push
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker build -t my-app .
-          docker tag my-app ${{ secrets.DOCKER_USERNAME }}/my-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker build -t app .
+          docker tag app ${{ secrets.DOCKER_USERNAME }}/app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
 
       - name: SSH를 이용해 EC2에 배포
         uses: appleboy/ssh-action@master

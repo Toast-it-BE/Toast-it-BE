@@ -1,11 +1,11 @@
 require('dotenv').config();
 
 module.exports = {
-  port: process.env.PORT,
+  PORT: process.env.PORT,
   db: {
     uri: process.env.URI,
   },
-  jwtSecret: process.env.jwtSecret,
+  JWT_SECRET: process.env.JWT_SECRET,
   KAKAO_CLIENT_ID: process.env.KAKAO_CLIENT_ID,
   KAKAO_REDIRECT_URI: process.env.KAKAO_REDIRECT_URI,
   GMAIL_USER: process.env.GMAIL_USER,

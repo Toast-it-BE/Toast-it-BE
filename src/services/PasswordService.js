@@ -19,7 +19,7 @@ class PasswordService {
     }
 
     const recoveryCode = Math.floor(100000 + Math.random() * 900000);
-    const token = jwt.sign({ email }, config.jwtSecret, { expiresIn: '5m' });
+    const token = jwt.sign({ email }, config.JWT_SECRET, { expiresIn: '5m' });
     this.verificationData[email] = { code: recoveryCode, token };
 
     await sendRecoveryCode(email, recoveryCode);
@@ -38,7 +38,7 @@ class PasswordService {
     }
 
     try {
-      jwt.verify(storedData.token, config.jwtSecret);
+      jwt.verify(storedData.token, config.JWT_SECRET);
     } catch (error) {
       throw new Error('인증 코드가 만료되었습니다.');
     }
@@ -47,7 +47,9 @@ class PasswordService {
       throw new Error('인증 코드가 일치하지 않습니다.');
     }
 
-    const newToken = jwt.sign({ email }, config.jwtSecret, { expiresIn: '1h' });
+    const newToken = jwt.sign({ email }, config.JWT_SECRET, {
+      expiresIn: '1h',
+    });
     delete this.verificationData[email];
 
     return { message: '인증이 완료되었습니다.', token: newToken };
@@ -82,7 +84,7 @@ class PasswordService {
       throw new Error('인증 토큰이 필요합니다.');
     }
 
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     const user = await User.findById(decoded.id);
     if (!user) {
       throw new Error('사용자를 찾을 수 없습니다.');

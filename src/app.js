@@ -36,6 +36,6 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/memos', memoRoutes);
 app.use('/api/auth/password', passwordRoutes);
 
-app.listen(config.port, '0.0.0.0', () => {
+app.listen(config.PORT, '0.0.0.0', () => {
   console.log('서버가 http://localhost:8000 에서 실행 중입니다.');
 });

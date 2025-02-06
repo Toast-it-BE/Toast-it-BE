@@ -67,7 +67,7 @@ class AuthService {
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      config.jwtSecret,
+      config.JWT_SECRET,
       { expiresIn: '30d' },
     );
 
@@ -102,7 +102,7 @@ class AuthService {
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      config.jwtSecret,
+      config.JWT_SECRET,
       { expiresIn: '30d' },
     );
 
@@ -152,7 +152,7 @@ class AuthService {
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      config.jwtSecret,
+      config.JWT_SECRET,
       { expiresIn: '30d' },
     );
 

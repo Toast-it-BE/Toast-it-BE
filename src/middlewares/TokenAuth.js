@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = decoded;
     return next();
   } catch (error) {
@@ -32,7 +32,7 @@ const resetTokenMiddleware = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
 
     if (!decoded.email) {
       return res

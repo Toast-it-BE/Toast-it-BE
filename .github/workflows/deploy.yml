@@ -32,4 +32,5 @@ jobs:
             docker stop app || true
             docker rm app || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/app:latest
-            docker run -d --name app -p 3000:3000 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/app:latest
+            docker run -d -p 8000:8000 --name app --env-file ~/Toast-it-BE/.env ${{ secrets.DOCKER_USERNAME }}/app:latest
+

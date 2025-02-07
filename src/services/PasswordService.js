@@ -6,11 +6,7 @@ const { hashPassword, comparePassword } = require('../utils/passwordUtils');
 const UserSignupDTO = require('../dto/UserSignupDto');
 
 class PasswordService {
-  constructor() {
-    if (!PasswordService.verificationData) {
-      PasswordService.verificationData = {};
-    }
-  }
+  static verificationData = {};
 
   static async sendRecoveryCode(email) {
     const user = await User.findOne({ email });
@@ -108,5 +104,4 @@ class PasswordService {
   }
 }
 
-// 싱글톤 인스턴스 생성 (필요시 여러 컨트롤러에서 동일한 인스턴스 사용 가능)
 module.exports = PasswordService;

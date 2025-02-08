@@ -122,6 +122,29 @@ class MemoService {
       })),
     };
   }
+
+  // 메모 카테고리 변경
+  static async updateMemoCategory(memoId, categoryId, userId) {
+    const categoryExists = await Category.findById(categoryId);
+    if (!categoryExists) {
+      throw new Error('CATEGORY_NOT_FOUND');
+    }
+
+    const memo = await Memo.findById(memoId);
+    if (!memo) {
+      throw new Error('MEMO_NOT_FOUND');
+    }
+
+    if (memo.userId.toString() !== userId) {
+      throw new Error('FORBIDDEN');
+    }
+
+    memo.categoryId = categoryId;
+    memo.updatedAt = new Date();
+    await memo.save();
+
+    return memo;
+  }
 }
 
 module.exports = MemoService;

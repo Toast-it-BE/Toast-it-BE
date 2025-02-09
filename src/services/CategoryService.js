@@ -31,7 +31,15 @@ class CategoryService {
     try {
       const user = await User.findById(userId);
       if (!user) return null;
-      return user.categories.map(categoryId => ({ id: categoryId }));
+
+      const categories = await Promise.all(
+        user.categories.map(async categoryId => {
+          const category = await Category.findById(categoryId);
+          return { id: categoryId, name: category.name };
+        }),
+      );
+
+      return categories;
     } catch (error) {
       console.error('사용자 카테고리 조회 오류:', error);
       throw error;

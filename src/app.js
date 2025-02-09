@@ -27,9 +27,6 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('연결 성공!');
 });
-app.get('/test', (req, res) => {
-  res.json({ message: 'CORS 설정 완료!' });
-});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);

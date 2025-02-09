@@ -5,6 +5,7 @@ const User = require('../models/User');
 const Category = require('../models/Category');
 const Memo = require('../models/Memo');
 const config = require('../config');
+const { generateCategory } = require('../utils/generateCategory');
 
 class AuthService {
   static async checkEmailExists(email) {
@@ -33,16 +34,9 @@ class AuthService {
     const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
 
-    const categoryNames = [
-      '카테고리1',
-      '카테고리2',
-      '카테고리3',
-      '카테고리4',
-      '카테고리5',
-    ];
-    const categories = await Category.insertMany(
-      categoryNames.map(name => ({ userId: newUser.id, name })),
-    );
+    const categoriesData = await generateCategory(newUser.id);
+
+    const categories = await Category.insertMany(categoriesData);
 
     newUser.categories = categories.map(category => category.id);
     await newUser.save();
@@ -89,16 +83,8 @@ class AuthService {
     user = new User({ email, isOAuthUser: true });
     await user.save();
 
-    const categoryNames = [
-      '카테고리1',
-      '카테고리2',
-      '카테고리3',
-      '카테고리4',
-      '카테고리5',
-    ];
-    const categories = await Category.insertMany(
-      categoryNames.map(name => ({ userId: user.id, name })),
-    );
+    const categoriesData = await generateCategory(user.id);
+    const categories = await Category.insertMany(categoriesData);
 
     const token = jwt.sign(
       { id: user.id, email: user.email },

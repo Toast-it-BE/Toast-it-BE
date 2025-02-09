@@ -12,7 +12,7 @@ class MemoService {
 
     if (!categoryId) {
       const defaultCategory = await Category.findOne({
-        name: '카테고리5',
+        name: '기본 카테고리',
         userId,
       });
       if (!defaultCategory) {

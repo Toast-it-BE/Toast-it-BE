@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const passwordRoutes = require('./routes/passwordRoutes');
 const connectDB = require('./utils/db');
@@ -9,37 +8,34 @@ const memoRoutes = require('./routes/MemoRoutes');
 const config = require('./config');
 
 const app = express();
-app.use(bodyParser.json());
 
 // MongoDB 연결
 connectDB();
 
-// CORS 설정
-app.use(cors());
-
-app.options('*', cors());
-
 app.use(
   cors({
-    origin: '*', // 허용할 도메인
+    origin: 'https://toast-it.site', // 허용할 도메인
     credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
-    methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE', // 허용할 메소드
-    allowedHeaders: 'Content-Type, Authorization', // 허용할 헤더
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'], // 허용할 메소드
+    allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
   }),
 );
 
+app.use(express.json());
+
+// 테스트 라우트
 app.get('/', (req, res) => {
   res.send('연결 성공!');
 });
-
-// 미들웨어 설정
-app.use(express.json());
+app.get('/test', (req, res) => {
+  res.json({ message: 'CORS 설정 완료!' });
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/memos', memoRoutes);
 app.use('/api/auth/password', passwordRoutes);
 
-app.listen(config.PORT, '0.0.0.0', () => {
-  console.log('서버가 http://localhost:8000 에서 실행 중입니다.');
+app.listen(config.PORT, () => {
+  console.log(`서버가 실행 중입니다. 포트: ${config.PORT}`);
 });

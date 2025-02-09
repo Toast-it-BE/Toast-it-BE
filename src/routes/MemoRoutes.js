@@ -7,6 +7,9 @@ const { authMiddleware } = require('../middlewares/TokenAuth');
 // 메모 작성
 router.post('/', authMiddleware, memoController.createMemo);
 
+// 메모 조회
+router.get('/:memoId', authMiddleware, memoController.getMemoById);
+
 // 메모 수정
 router.patch('/:memoId', authMiddleware, memoController.updateMemo);
 

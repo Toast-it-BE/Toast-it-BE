@@ -15,6 +15,24 @@ exports.createMemo = async (req, res) => {
   }
 };
 
+exports.getMemoById = async (req, res) => {
+  try {
+    const { memoId } = req.params;
+    const userId = req.user.id;
+
+    const memo = await MemoService.getMemoById(memoId, userId);
+
+    if (!memo) {
+      return res.status(404).json({ message: '메모를 찾을 수 없습니다.' });
+    }
+
+    return res.status(200).json(memo);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: '서버 오류' });
+  }
+};
+
 exports.updateMemo = async (req, res) => {
   try {
     const { memoId } = req.params;

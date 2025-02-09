@@ -51,6 +51,11 @@ class MemoService {
     };
   }
 
+  // 메모 조회
+  static async getMemoById(memoId, userId) {
+    return Memo.findOne({ _id: memoId, userId });
+  }
+
   // 메모 수정
   static async updateMemo(userId, memoId, title, content) {
     const memo = await Memo.findOne({ _id: memoId, userId });

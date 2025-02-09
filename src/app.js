@@ -14,7 +14,11 @@ connectDB();
 
 app.use(
   cors({
-    origin: ['https://www.toast-it.site', 'https://toast-it.site'], // 허용할 도메인
+    origin: [
+      'https://www.toast-it.site',
+      'https://toast-it.site',
+      'http://localhost:3000',
+    ], // 허용할 도메인
     credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'], // 허용할 메소드
     allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더

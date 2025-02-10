@@ -4,10 +4,6 @@ const Category = require('../models/Category');
 class MemoService {
   // 메모 생성
   static async createMemo(userId, title, content, categoryId) {
-    if (!content || content.trim() === '') {
-      return { status: 200, message: '본문 내용이 없어 저장되지 않았습니다.' };
-    }
-
     let targetCategoryId = categoryId;
 
     if (!categoryId) {

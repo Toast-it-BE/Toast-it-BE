@@ -8,7 +8,7 @@ const noteSchema = new mongoose.Schema({
     ref: 'Category',
   },
   title: { type: String, default: '' },
-  content: { type: String, required: true },
+  content: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

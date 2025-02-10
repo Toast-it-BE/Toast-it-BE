@@ -1,6 +1,6 @@
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const jwtUtils = require('../utils/jwtUtils');
 const User = require('../models/User');
 const Category = require('../models/Category');
 const Memo = require('../models/Memo');
@@ -59,11 +59,7 @@ class AuthService {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error('이메일 또는 비밀번호가 잘못되었습니다.');
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      config.JWT_SECRET,
-      { expiresIn: '30d' },
-    );
+    const token = jwtUtils.generateAccessToken(user.id, user.email);
 
     return { user: { id: user.id, email: user.email }, token };
   }
@@ -86,11 +82,7 @@ class AuthService {
     const categoriesData = await generateCategory(user.id);
     const categories = await Category.insertMany(categoriesData);
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      config.JWT_SECRET,
-      { expiresIn: '30d' },
-    );
+    const token = jwtUtils.generateAccessToken(user.id, user.email);
 
     return { user: { id: user.id, email: user.email, categories }, token };
   }
@@ -136,13 +128,20 @@ class AuthService {
     if (!user)
       throw new Error('해당 카카오 계정으로 가입된 사용자가 없습니다.');
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      config.JWT_SECRET,
-      { expiresIn: '30d' },
-    );
+    const token = jwtUtils.generateAccessToken(user.id, user.email);
 
     return { user: { id: user.id, email: user.email }, token };
+  }
+
+  // 로그인 복원
+  static async restoreAuth(req) {
+    const token = req.cookies.accessToken;
+    if (!token) return Promise.resolve(null);
+
+    const user = await jwtUtils.verifyAccessToken(token);
+    if (!user) return Promise.resolve(null);
+
+    return { accessToken: token, user };
   }
 
   // 회원 탈퇴

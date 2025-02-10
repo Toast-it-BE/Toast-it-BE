@@ -22,6 +22,9 @@ router.get('/signup/kakao', userController.getKakaoAccessToken);
 // 카카오 로그인
 router.post('/login/kakao', userController.kakaoLogin);
 
+// 자동 로그인
+router.get('/restore', userController.restoreAuth);
+
 // 일반 로그아웃
 router.post('/logout', userController.logout);
 

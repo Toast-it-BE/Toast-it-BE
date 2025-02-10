@@ -7,8 +7,10 @@ RUN npm install --only=production
 
 COPY . .
 
+RUN npm install -g pm2
+
 ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["npx", "pm2-runtime", "src/app.js"]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]

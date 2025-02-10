@@ -32,10 +32,33 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const result = await AuthService.login(new UserLoginDTO(req.body));
-    return res.status(200).json({ message: '로그인되었습니다.', ...result });
+    const { token, ...result } = await AuthService.login(
+      new UserLoginDTO(req.body),
+    );
+    res.cookie('accessToken', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
+    });
+    return res
+      .status(200)
+      .json({ message: '로그인되었습니다.', ...result, token });
   } catch (error) {
     return res.status(401).json({ message: error.message });
+  }
+};
+
+exports.restoreAuth = async (req, res) => {
+  try {
+    const response = await AuthService.restoreAuth(req);
+
+    if (!response) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
   }
 };
 
@@ -83,6 +106,7 @@ exports.getKakaoAccessToken = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     const result = await AuthService.logout();
+    res.clearCookie('accessToken');
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const passwordRoutes = require('./routes/passwordRoutes');
 const connectDB = require('./utils/db');
 const authRoutes = require('./routes/AuthRoutes');
@@ -26,6 +27,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 // 테스트 라우트
 app.get('/', (req, res) => {

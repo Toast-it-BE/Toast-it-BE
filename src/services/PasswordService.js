@@ -86,7 +86,7 @@ class PasswordService {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
 
-    if (!comparePassword(currentPassword, user.password)) {
+    if (!(await comparePassword(currentPassword, user.password))) {
       throw new Error('현재 비밀번호가 일치하지 않습니다.');
     }
 

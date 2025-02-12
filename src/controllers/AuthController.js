@@ -35,6 +35,11 @@ exports.login = async (req, res) => {
     const { token, ...result } = await AuthService.login(
       new UserLoginDTO(req.body),
     );
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+    });
     res.cookie('accessToken', token, {
       domain: 'toast-it.site',
       httpOnly: true,

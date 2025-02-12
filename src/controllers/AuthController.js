@@ -61,7 +61,7 @@ exports.restore = async (req, res) => {
     }
 
     res.cookie('accessToken', authData.accessToken, {
-      // domain: '.toast-it.site',
+      domain: 'www.toast-it.site',
       httpOnly: true,
       secure: true,
       sameSite: 'Lax',

@@ -61,10 +61,10 @@ exports.restore = async (req, res) => {
     }
 
     res.cookie('accessToken', authData.accessToken, {
-      domain: '.toast-it.site',
+      // domain: '.toast-it.site',
       httpOnly: true,
       secure: true,
-      sameSite: 'None',
+      sameSite: 'Lax',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 

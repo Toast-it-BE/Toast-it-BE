@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
 exports.restore = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    console.log('Cookies:', req.cookies);
     if (!token) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }

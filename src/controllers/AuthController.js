@@ -35,7 +35,6 @@ exports.login = async (req, res) => {
     const { token, ...result } = await AuthService.login(
       new UserLoginDTO(req.body),
     );
-    res.setHeader('Cache-Control', 'no-store');
     res.cookie('accessToken', token, {
       domain: 'toast-it.site',
       httpOnly: true,

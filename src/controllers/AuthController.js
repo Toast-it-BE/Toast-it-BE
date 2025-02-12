@@ -36,12 +36,13 @@ exports.login = async (req, res) => {
       new UserLoginDTO(req.body),
     );
     res.cookie('accessToken', token, {
-      domain: 'toast-it.site',
+      domain: '.toast-it.site',
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
+      sameSite: 'None',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
+
     return res
       .status(200)
       .json({ message: '로그인되었습니다.', ...result, token });

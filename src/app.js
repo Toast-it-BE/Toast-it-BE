@@ -15,11 +15,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: [
-      'https://www.toast-it.site',
-      'https://toast-it.site',
-      'http://localhost:3000',
-    ],
+    origin: ['https://www.toast-it.site', 'https://toast-it.site'],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: [
@@ -30,9 +26,10 @@ app.use(
       'Set-Cookie',
     ],
     exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   }),
 );
-
 app.use(express.json());
 app.use(cookieParser());
 

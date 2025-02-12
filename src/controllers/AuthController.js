@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
     res.cookie('accessToken', token, {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict',
+      sameSite: 'None',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
     });
     return res

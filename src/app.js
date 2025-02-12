@@ -18,33 +18,10 @@ app.use(
     origin: ['https://www.toast-it.site', 'https://toast-it.site'],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Access-Control-Allow-Headers',
-      'Set-Cookie',
-    ],
-    exposedHeaders: ['Set-Cookie'],
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   }),
 );
 
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://www.toast-it.site');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-  );
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With, Set-Cookie',
-  );
-  res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie');
-  res.status(204).end();
-});
 app.use(express.json());
 app.use(cookieParser());
 

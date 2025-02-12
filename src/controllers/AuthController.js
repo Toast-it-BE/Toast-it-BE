@@ -1,7 +1,6 @@
 const AuthService = require('../services/AuthService');
 const UserSignupDTO = require('../dto/UserSignupDto');
 const UserLoginDTO = require('../dto/UserLoginDto');
-const jwtUtils = require('../utils/jwtUtils');
 
 exports.checkEmailExists = async (req, res) => {
   try {
@@ -54,18 +53,14 @@ exports.login = async (req, res) => {
 
 exports.restore = async (req, res) => {
   try {
-    const token = req.cookies.accessToken;
     console.log('Cookies:', req.cookies);
-    if (!token) {
+
+    const authData = await AuthService.restoreAuth(req);
+    if (!authData) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
-    const decoded = jwtUtils.verifyAccessToken(token);
-    if (!decoded) {
-      return res.status(401).json({ message: '로그인이 필요합니다.' });
-    }
-
-    res.cookie('accessToken', token, {
+    res.cookie('accessToken', authData.accessToken, {
       domain: '.toast-it.site',
       httpOnly: true,
       secure: true,
@@ -73,8 +68,11 @@ exports.restore = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({ message: 'Token is valid', user: decoded });
+    return res
+      .status(200)
+      .json({ message: 'Token is valid', user: authData.user });
   } catch (error) {
+    console.error('Restore Auth Error:', error);
     return res.status(500).json({ message: 'Server error' });
   }
 };

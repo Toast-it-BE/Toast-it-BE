@@ -136,10 +136,10 @@ class AuthService {
   // 로그인 복원
   static async restoreAuth(req) {
     const token = req.cookies.accessToken;
-    if (!token) return Promise.resolve(null);
+    if (!token) return null;
 
     const user = await jwtUtils.verifyAccessToken(token);
-    if (!user) return Promise.resolve(null);
+    if (!user) return null;
 
     return { accessToken: token, user };
   }

@@ -36,10 +36,10 @@ exports.login = async (req, res) => {
       new UserLoginDTO(req.body),
     );
     res.cookie('accessToken', token, {
-      domain: '.toast-it.site',
+      domain: 'www.toast-it.site',
       httpOnly: true,
       secure: true,
-      sameSite: 'None',
+      sameSite: 'Lax',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 

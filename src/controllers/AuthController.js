@@ -1,6 +1,7 @@
 const AuthService = require('../services/AuthService');
 const UserSignupDTO = require('../dto/UserSignupDto');
 const UserLoginDTO = require('../dto/UserLoginDto');
+const jwtUtils = require('../utils/jwtUtils');
 
 exports.checkEmailExists = async (req, res) => {
   try {
@@ -51,22 +52,29 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.restoreAuth = async (req, res) => {
+exports.restore = async (req, res) => {
   try {
-    const response = await AuthService.restoreAuth(req);
-
-    if (!response) {
+    const token = req.cookies.accessToken;
+    if (!token) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
-    res.cookie('accessToken', response.accessToken, {
+
+    const decoded = jwtUtils.verifyAccessToken(token);
+    if (!decoded) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    res.cookie('accessToken', token, {
+      domain: '.toast-it.site',
       httpOnly: true,
       secure: true,
       sameSite: 'None',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30일 유지
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    return res.status(200).json(response);
+
+    return res.status(200).json({ message: 'Token is valid', user: decoded });
   } catch (error) {
-    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 

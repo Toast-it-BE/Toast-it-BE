@@ -23,7 +23,7 @@ router.get('/signup/kakao', userController.getKakaoAccessToken);
 router.post('/login/kakao', userController.kakaoLogin);
 
 // 자동 로그인
-router.get('/restore', userController.restoreAuth);
+router.get('/restore', userController.restore);
 
 // 일반 로그아웃
 router.post('/logout', userController.logout);

@@ -15,7 +15,11 @@ connectDB();
 
 app.use(
   cors({
-    origin: ['https://www.toast-it.site', 'https://toast-it.site'],
+    origin: [
+      'https://www.toast-it.site',
+      'https://toast-it.site',
+      'http://localhost:3000',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

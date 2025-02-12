@@ -19,10 +19,17 @@ app.use(
       'https://www.toast-it.site',
       'https://toast-it.site',
       'http://localhost:3000',
-    ], // 허용할 도메인
-    credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
-    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'], // 허용할 메소드
-    allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Access-Control-Allow-Headers',
+      'Set-Cookie',
+    ],
+    exposedHeaders: ['Set-Cookie'],
   }),
 );
 

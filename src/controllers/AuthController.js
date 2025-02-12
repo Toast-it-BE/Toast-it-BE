@@ -62,6 +62,12 @@ exports.restoreAuth = async (req, res) => {
     if (!response) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
+    res.cookie('accessToken', response.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30일 유지
+    });
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ message: '서버 오류가 발생했습니다.' });

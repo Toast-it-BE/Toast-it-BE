@@ -78,6 +78,7 @@ class MemoService {
       memo: {
         id: memo.id,
         categoryId: memo.categoryId,
+        toastNumber: memo.toastNumber,
         title: memo.title,
         content: memo.content,
         updatedAt: memo.updatedAt,
@@ -118,6 +119,7 @@ class MemoService {
       },
       notes: memos.map(memo => ({
         id: memo.id,
+        toastNumber: memo.toastNumber,
         title: memo.title,
         content: memo.content,
         createdAt: memo.createdAt,

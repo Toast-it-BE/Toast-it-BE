@@ -54,10 +54,9 @@ class AuthService {
     const { email, password } = userLoginDTO;
 
     const user = await User.findOne({ email });
-    if (!user) throw new Error('이메일 또는 비밀번호가 잘못되었습니다.');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('이메일 또는 비밀번호가 잘못되었습니다.');
+    if (!isMatch) throw new Error('비밀번호가 일치하지 않습니다.');
 
     const token = jwtUtils.generateAccessToken(user.id, user.email);
 
@@ -135,10 +134,15 @@ class AuthService {
 
   // 로그인 복원
   static async restoreAuth(req) {
-    const token = req.cookies.accessToken;
-    if (!token) return null;
+    const authHeader = req.headers.authorization;
 
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return null;
+    }
+
+    const token = authHeader.split(' ')[1];
     const user = await jwtUtils.verifyAccessToken(token);
+
     if (!user) return null;
 
     return { accessToken: token, user };

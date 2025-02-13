@@ -35,13 +35,6 @@ exports.login = async (req, res) => {
     const { token, ...result } = await AuthService.login(
       new UserLoginDTO(req.body),
     );
-    res.cookie('accessToken', token, {
-      domain: '.toast-it.site',
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
 
     return res
       .status(200)
@@ -53,26 +46,18 @@ exports.login = async (req, res) => {
 
 exports.restore = async (req, res) => {
   try {
-    console.log('Cookies:', req.cookies);
+    console.log('Authorization Header:', req.headers.authorization);
 
     const authData = await AuthService.restoreAuth(req);
     if (!authData) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
-    res.cookie('accessToken', authData.accessToken, {
-      domain: 'www.toast-it.site',
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-
     return res
       .status(200)
-      .json({ message: 'Token is valid', user: authData.user });
+      .json({ message: '토큰이 유효합니다.', user: authData.user });
   } catch (error) {
-    console.error('Restore Auth Error:', error);
+    console.error('로그인 유지 에러:', error);
     return res.status(500).json({ message: 'Server error' });
   }
 };

@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const passwordRoutes = require('./routes/passwordRoutes');
 const connectDB = require('./utils/db');
 const authRoutes = require('./routes/AuthRoutes');
@@ -11,19 +10,6 @@ const app = express();
 
 // MongoDB 연결
 connectDB();
-
-app.use(
-  cors({
-    origin: [
-      'https://www.toast-it.site',
-      'https://toast-it.site',
-      'http://localhost:3000',
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
 
 app.use(express.json());
 

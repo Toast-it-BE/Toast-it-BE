@@ -40,7 +40,7 @@ class MemoService {
       memo: {
         id: memo.id,
         categoryId: memo.categoryId,
-        toast: memo.toastNumber,
+        toastNumber: memo.toastNumber,
         title: memo.title,
         content: memo.content,
         createdAt: memo.createdAt,

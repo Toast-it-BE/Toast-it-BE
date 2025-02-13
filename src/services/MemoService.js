@@ -99,31 +99,31 @@ class MemoService {
     return { status: 200, message: '메모가 성공적으로 삭제되었습니다.' };
   }
 
-  // 카테고리별 메모 목록 조회
-  static async getMemosByCategory(userId, categoryId) {
-    const category = await Category.findOne({ _id: categoryId, userId });
+  // 카테고리별 노트 목록 조회
+  static async getNotesByCategory(userId, categoryId) {
+    const categoryInfo = await Category.findOne({ _id: categoryId, userId });
 
-    if (!category) {
+    if (!categoryInfo) {
       return { status: 404, message: '해당 카테고리를 찾을 수 없습니다.' };
     }
 
-    const memos = await Memo.find({ categoryId, userId })
+    const notes = await Memo.find({ categoryId, userId })
       .sort({ createdAt: -1 })
-      .select('_id title content createdAt updatedAt');
+      .select('_id toastNumber title content createdAt updatedAt'); // toastNumber 추가
 
     return {
       status: 200,
-      category: {
-        id: category.id,
-        name: category.name,
+      categoryInfo: {
+        id: categoryInfo.id,
+        name: categoryInfo.name,
       },
-      notes: memos.map(memo => ({
-        id: memo.id,
-        toastNumber: memo.toastNumber,
-        title: memo.title,
-        content: memo.content,
-        createdAt: memo.createdAt,
-        updatedAt: memo.updatedAt,
+      notes: notes.map(note => ({
+        id: note.id,
+        toastNumber: note.toastNumber,
+        title: note.title,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
       })),
     };
   }

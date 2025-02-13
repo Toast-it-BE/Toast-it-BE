@@ -30,6 +30,7 @@ class MemoService {
       categoryId: category.id,
       title: memoTitle,
       content,
+      toastNumber: Math.floor(Math.random() * 5) + 1,
     });
     await memo.save();
 
@@ -39,6 +40,7 @@ class MemoService {
       memo: {
         id: memo.id,
         categoryId: memo.categoryId,
+        toast: memo.toastNumber,
         title: memo.title,
         content: memo.content,
         createdAt: memo.createdAt,

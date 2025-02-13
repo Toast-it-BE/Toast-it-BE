@@ -7,6 +7,7 @@ const noteSchema = new mongoose.Schema({
     required: true,
     ref: 'Category',
   },
+  toastNumber: { type: Number },
   title: { type: String, default: '' },
   content: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },

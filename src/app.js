@@ -6,7 +6,7 @@ const authRoutes = require('./routes/AuthRoutes');
 const categoryRoutes = require('./routes/CategoryRoutes');
 const memoRoutes = require('./routes/MemoRoutes');
 const config = require('./config');
-const errorHandler = require('./middlewares/ErrorHandler');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 

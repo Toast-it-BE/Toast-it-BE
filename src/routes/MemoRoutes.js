@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const memoController = require('../controllers/MemoController');
-const { authMiddleware } = require('../middlewares/TokenAuth');
+const { authMiddleware } = require('../middlewares/tokenAuth');
 
 // 메모 작성
 router.post('/', authMiddleware, memoController.createMemo);

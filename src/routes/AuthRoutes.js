@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const userController = require('../controllers/AuthController');
-const { authMiddleware } = require('../middlewares/TokenAuth');
+const { authMiddleware } = require('../middlewares/tokenAuth');
 
 // 이메일 가입 여부 확인
 router.post('/check-email', userController.checkEmailExists);

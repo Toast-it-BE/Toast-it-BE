@@ -8,7 +8,7 @@ const {
 const {
   authMiddleware,
   resetTokenMiddleware,
-} = require('../middlewares/TokenAuth');
+} = require('../middlewares/tokenAuth');
 
 const router = express.Router();
 

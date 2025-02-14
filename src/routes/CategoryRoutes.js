@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/CategoryController');
 const memoController = require('../controllers/MemoController');
-const { authMiddleware } = require('../middlewares/TokenAuth');
+const { authMiddleware } = require('../middlewares/tokenAuth');
 
 // 카테고리 이름 변경
 router.patch(

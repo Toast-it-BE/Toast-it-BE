@@ -6,6 +6,9 @@ const Category = require('../models/Category');
 const Memo = require('../models/Memo');
 const config = require('../config');
 const { generateCategory } = require('../utils/generateCategory');
+const AuthError = require('../errors/AuthError');
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 
 class AuthService {
   static async checkEmailExists(email) {
@@ -26,7 +29,7 @@ class AuthService {
     // 이메일 중복 확인
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new Error('이미 사용 중인 이메일입니다.');
+      throw new AuthError('이미 사용 중인 이메일입니다.', 409);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,7 +59,7 @@ class AuthService {
     const user = await User.findOne({ email });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('비밀번호가 일치하지 않습니다.');
+    if (!isMatch) throw new AuthError('비밀번호가 일치하지 않습니다.', 401);
 
     const token = jwtUtils.generateAccessToken(user.id, user.email);
 
@@ -70,10 +73,11 @@ class AuthService {
     });
 
     const email = kakaoResponse.data.kakao_account?.email;
-    if (!email) throw new Error('카카오에서 이메일 정보를 제공하지 않습니다.');
+    if (!email)
+      throw new ValidationError('카카오에서 이메일 정보를 제공하지 않습니다.');
 
     let user = await User.findOne({ email });
-    if (user) throw new Error('이미 가입되어있는 이메일입니다.');
+    if (user) throw new AuthError('이미 가입되어있는 이메일입니다.', 409);
 
     user = new User({ email, isOAuthUser: true });
     await user.save();
@@ -110,7 +114,7 @@ class AuthService {
         '카카오 액세스 토큰 요청 오류:',
         error.response ? error.response.data : error,
       );
-      throw new Error('카카오 액세스 토큰 요청 실패');
+      throw new AuthError('카카오 액세스 토큰 요청 실패', 502);
     }
   }
 
@@ -121,11 +125,12 @@ class AuthService {
     });
 
     const email = kakaoResponse.data.kakao_account?.email;
-    if (!email) throw new Error('유효하지 않은 카카오 액세스 토큰입니다.');
+    if (!email)
+      throw new AuthError('유효하지 않은 카카오 액세스 토큰입니다.', 401);
 
     const user = await User.findOne({ email });
     if (!user)
-      throw new Error('해당 카카오 계정으로 가입된 사용자가 없습니다.');
+      throw new NotFoundError('해당 카카오 계정으로 가입된 사용자가 없습니다.');
 
     const token = jwtUtils.generateAccessToken(user.id, user.email);
 
@@ -152,7 +157,9 @@ class AuthService {
   static async deleteUser(userId) {
     const user = await User.findById(userId);
     if (!user)
-      throw new Error('탈퇴된 사용자이거나 존재하지 않는 사용자입니다.');
+      throw new NotFoundError(
+        '탈퇴된 사용자이거나 존재하지 않는 사용자입니다.',
+      );
 
     await Memo.deleteMany({ userId });
     await Category.deleteMany({ userId });
@@ -178,7 +185,7 @@ class AuthService {
       );
       return { message: '카카오 로그아웃이 완료되었습니다.' };
     } catch (error) {
-      throw new Error('카카오 로그아웃 요청이 실패했습니다.');
+      throw new AuthError('카카오 로그아웃 요청 실패', 502);
     }
   }
 }

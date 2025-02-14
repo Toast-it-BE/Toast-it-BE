@@ -1,6 +1,7 @@
 const MemoService = require('../services/MemoService');
+const ValidationError = require('../errors/ValidationError');
 
-exports.createMemo = async (req, res) => {
+exports.createMemo = async (req, res, next) => {
   try {
     const { title, content, categoryId } = req.body;
     const response = await MemoService.createMemo(
@@ -9,31 +10,26 @@ exports.createMemo = async (req, res) => {
       content,
       categoryId,
     );
-    return res.status(response.status).json(response);
+    return res.status(201).json(response);
   } catch (error) {
-    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    return next(error);
   }
 };
 
-exports.getMemoById = async (req, res) => {
+exports.getMemoById = async (req, res, next) => {
   try {
     const { memoId } = req.params;
     const userId = req.user.id;
 
     const memo = await MemoService.getMemoById(memoId, userId);
 
-    if (!memo) {
-      return res.status(404).json({ message: '메모를 찾을 수 없습니다.' });
-    }
-
     return res.status(200).json(memo);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: '서버 오류' });
+    return next(error);
   }
 };
 
-exports.updateMemo = async (req, res) => {
+exports.updateMemo = async (req, res, next) => {
   try {
     const { memoId } = req.params;
     const { title, content } = req.body;
@@ -43,45 +39,43 @@ exports.updateMemo = async (req, res) => {
       title,
       content,
     );
-    return res.status(response.status).json(response);
+    return res.status(200).json(response);
   } catch (error) {
-    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    return next(error);
   }
 };
 
-exports.deleteMemo = async (req, res) => {
+exports.deleteMemo = async (req, res, next) => {
   try {
     const { memoId } = req.params;
     const response = await MemoService.deleteMemo(req.user.id, memoId);
-    return res.status(response.status).json(response);
+    return res.status(200).json(response);
   } catch (error) {
-    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    return next(error);
   }
 };
 
-exports.getMemosByCategory = async (req, res) => {
+exports.getMemosByCategory = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
     const response = await MemoService.getMemosByCategory(
       req.user.id,
       categoryId,
     );
-    return res.status(response.status).json(response);
+    return res.status(200).json(response);
   } catch (error) {
-    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    return next(error);
   }
 };
 
-exports.updateMemoCategory = async (req, res) => {
+exports.updateMemoCategory = async (req, res, next) => {
   try {
     const { memoId } = req.params;
     const { categoryId } = req.body;
-    const userId = req.user.id; // JWT에서 가져온 사용자 ID
+    const userId = req.user.id;
 
-    if (!categoryId) {
-      return res
-        .status(400)
-        .json({ error: 'categoryId는 필수 입력 값입니다.' });
+    if (!categoryId || categoryId.trim() === '') {
+      throw new ValidationError('categoryId는 필수 입력 값입니다.', 400);
     }
 
     const updatedMemo = await MemoService.updateMemoCategory(
@@ -95,17 +89,6 @@ exports.updateMemoCategory = async (req, res) => {
       memo: updatedMemo,
     });
   } catch (error) {
-    if (error.message === 'CATEGORY_NOT_FOUND') {
-      return res
-        .status(400)
-        .json({ error: '유효한 categoryId를 입력해주세요.' });
-    }
-    if (error.message === 'MEMO_NOT_FOUND') {
-      return res.status(404).json({ error: '해당 메모를 찾을 수 없습니다.' });
-    }
-    if (error.message === 'FORBIDDEN') {
-      return res.status(403).json({ error: '메모를 수정할 권한이 없습니다.' });
-    }
-    return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+    return next(error);
   }
 };

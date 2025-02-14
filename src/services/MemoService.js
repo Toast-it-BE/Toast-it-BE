@@ -1,5 +1,8 @@
 const Memo = require('../models/Memo');
 const Category = require('../models/Category');
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
+const AuthError = require('../errors/AuthError');
 
 class MemoService {
   // 메모 생성
@@ -12,14 +15,14 @@ class MemoService {
         userId,
       });
       if (!defaultCategory) {
-        return { status: 404, message: '기본 카테고리를 찾을 수 없습니다.' };
+        throw new NotFoundError('기본 카테고리를 찾을 수 없습니다.', 404);
       }
       targetCategoryId = defaultCategory.id;
     }
 
     const category = await Category.findOne({ _id: targetCategoryId, userId });
     if (!category) {
-      return { status: 404, message: '요청한 카테고리를 찾을 수 없습니다.' };
+      throw new NotFoundError('요청한 카테고리를 찾을 수 없습니다.', 404);
     }
 
     const memoTitle =
@@ -35,7 +38,6 @@ class MemoService {
     await memo.save();
 
     return {
-      status: 201,
       message: '메모가 성공적으로 작성되었습니다.',
       memo: {
         id: memo.id,
@@ -51,7 +53,9 @@ class MemoService {
 
   // 메모 조회
   static async getMemoById(memoId, userId) {
-    return Memo.findOne({ _id: memoId, userId });
+    const memo = await Memo.findOne({ _id: memoId, userId });
+    if (!memo) throw new NotFoundError('해당 메모를 찾을 수 없습니다.', 404);
+    return memo;
   }
 
   // 메모 수정
@@ -59,12 +63,12 @@ class MemoService {
     const memo = await Memo.findOne({ _id: memoId, userId });
 
     if (!memo) {
-      return { status: 404, message: '해당 메모를 찾을 수 없습니다.' };
+      throw new NotFoundError('해당 메모를 찾을 수 없습니다.', 404);
     }
 
     if (!content || content.trim() === '') {
       await Memo.deleteOne({ _id: memoId });
-      return { status: 200, message: '본문 내용이 없어 저장되지 않았습니다.' };
+      throw new ValidationError('본문 내용이 없어 저장되지 않았습니다.', 400);
     }
 
     memo.title = title && title.trim() !== '' ? title : memo.title;
@@ -73,7 +77,6 @@ class MemoService {
     await memo.save();
 
     return {
-      status: 200,
       message: '메모가 성공적으로 수정되었습니다.',
       memo: {
         id: memo.id,
@@ -91,12 +94,12 @@ class MemoService {
     const memo = await Memo.findOne({ _id: memoId, userId });
 
     if (!memo) {
-      return { status: 404, message: '요청한 메모를 찾을 수 없습니다.' };
+      throw new NotFoundError('요청한 메모를 찾을 수 없습니다.', 404);
     }
 
     await Memo.deleteOne({ _id: memoId });
 
-    return { status: 200, message: '메모가 성공적으로 삭제되었습니다.' };
+    return { message: '메모가 성공적으로 삭제되었습니다.' };
   }
 
   // 카테고리별 메모 목록 조회
@@ -104,22 +107,21 @@ class MemoService {
     const category = await Category.findOne({ _id: categoryId, userId });
 
     if (!category) {
-      return { status: 404, message: '해당 카테고리를 찾을 수 없습니다.' };
+      throw new NotFoundError('해당 카테고리를 찾을 수 없습니다.', 404);
     }
 
     const memos = await Memo.find({ categoryId, userId })
       .sort({ createdAt: -1 })
-      .select('_id toastNumber title content createdAt updatedAt'); // toastNumber 추가
+      .select('_id toastNumber title content createdAt updatedAt');
 
     return {
-      status: 200,
       category: {
         id: category.id,
         name: category.name,
       },
       notes: memos.map(memo => ({
         id: memo.id,
-        toastNumber: memo.toastNumber, // toastNumber 포함
+        toastNumber: memo.toastNumber,
         title: memo.title,
         content: memo.content,
         createdAt: memo.createdAt,
@@ -132,16 +134,16 @@ class MemoService {
   static async updateMemoCategory(memoId, categoryId, userId) {
     const categoryExists = await Category.findById(categoryId);
     if (!categoryExists) {
-      throw new Error('CATEGORY_NOT_FOUND');
+      throw new NotFoundError('해당 카테고리를 찾을 수 없습니다.', 404);
     }
 
     const memo = await Memo.findById(memoId);
     if (!memo) {
-      throw new Error('MEMO_NOT_FOUND');
+      throw new NotFoundError('해당 메모를 찾을 수 없습니다.', 404);
     }
 
     if (memo.userId.toString() !== userId) {
-      throw new Error('FORBIDDEN');
+      throw new AuthError('권한이 없습니다.', 403);
     }
 
     memo.categoryId = categoryId;

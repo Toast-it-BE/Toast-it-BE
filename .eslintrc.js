@@ -19,6 +19,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error', // Prettier 규칙 위반 시 에러 발생
     'no-console': 'off', // 콘솔 로그 허용
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'import/no-extraneous-dependencies': [
       'error',
       {

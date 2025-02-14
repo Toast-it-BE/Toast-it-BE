@@ -6,6 +6,7 @@ const authRoutes = require('./routes/AuthRoutes');
 const categoryRoutes = require('./routes/CategoryRoutes');
 const memoRoutes = require('./routes/MemoRoutes');
 const config = require('./config');
+const errorHandler = require('./middlewares/ErrorHandler');
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/memos', memoRoutes);
 app.use('/api/auth/password', passwordRoutes);
+
+app.use(errorHandler);
 
 app.listen(config.PORT, () => {
   console.log(`서버가 실행 중입니다. 포트: ${config.PORT}`);
